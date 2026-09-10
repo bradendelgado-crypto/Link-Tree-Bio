@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What If Investment Calculator</title>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="The 'What If' Investment Calculator">
+<meta property="og:description" content="See what consistent monthly investing could actually become. Model it yourself — no login, no product pitch.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The 'What If' Investment Calculator">
+<meta name="twitter:description" content="See what consistent monthly investing could actually become.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    /* LTLM brand palette */
+    --bg-base: #0C1F16;
+    --bg-mid: #0A1A13;
+    --bg-deep: #060F0B;
+
+    --card-top: #14291D;
+    --card-bottom: #0E2016;
+    --card-border: rgba(184, 145, 47, 0.22);
+    --card-border-hover: rgba(217, 177, 90, 0.55);
+
+    --gold: #B8912F;
+    --gold-bright: #D9B15A;
+    --mint: #7FD9A8;
+    --blue: #5FA8D3;
+    --rust: #D9695A;
+
+    --cream: #F5F1E6;
+    --body-copy: #C7D0C9;
+    --muted-label: #8FA096;
+    --footnote: #6E7D74;
+
+    --font-heading: 'Gelasio', Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { background: var(--bg-deep); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, var(--bg-mid) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-base) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+    background-attachment: fixed;
+    color: var(--body-copy);
+    font-family: var(--font-body);
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 40px;
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 18px 12px 32px; }
+  }
+
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+
+  h1, h2, h3 { font-family: var(--font-heading); color: var(--cream); margin: 0; }
+
+  .app {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  /* ---------- Header ---------- */
+
+  .app-header {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+
+  .app-title {
+    font-weight: 600;
+    font-size: clamp(26px, 5.5vw, 38px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .app-subtitle {
+    font-size: 14.5px;
+    color: var(--body-copy);
+    max-width: 480px;
+    margin: 10px auto 0;
+    line-height: 1.55;
+  }
+
+  /* ---------- Tabs ---------- */
+
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    background: rgba(0,0,0,0.22);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 5px;
+    margin: 0 0 22px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--muted-label);
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold) 100%);
+    color: var(--bg-deep);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ---------- Cards ---------- */
+
+  .card {
+    background: linear-gradient(180deg, var(--card-top) 0%, var(--card-bottom) 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 18px;
+  }
+
+  .card h2 {
+    font-size: 19px;
+    margin-bottom: 4px;
+  }
+
+  .card-hint {
+    font-size: 13px;
+    color: var(--muted-label);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  /* ---------- Inputs ---------- */
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+
+  .field label .val {
+    font-family: var(--font-heading);
+    color: var(--gold-bright);
+    font-size: 15px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  .input-wrap .prefix,
+  .input-wrap .suffix {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted-label);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  .input-wrap .prefix { left: 14px; }
+  .input-wrap .suffix { right: 14px; }
+
+  input[type="number"] {
+    width: 100%;
+    background: rgba(0,0,0,0.28);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 16px;
+    padding: 12px 14px 12px 28px;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"].has-suffix { padding-right: 40px; }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"]:focus {
+    border-color: var(--card-border-hover);
+  }
+
+  /* Slider */
+
+  input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.35);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    border: 3px solid var(--bg-deep);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    cursor: pointer;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    border: 3px solid var(--bg-deep);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    cursor: pointer;
+  }
+
+  .range-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: var(--footnote);
+    margin-top: 6px;
+  }
+
+  /* Toggle row */
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .toggle-row .toggle-label {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .toggle-row .toggle-sub {
+    font-size: 12px;
+    color: var(--muted-label);
+    margin-top: 2px;
+  }
+
+  .switch {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+
+  .switch input { opacity: 0; width: 0; height: 0; }
+
+  .switch .slider {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .switch .slider::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: var(--cream);
+    border-radius: 50%;
+    transition: transform 0.15s ease;
+  }
+
+  .switch input:checked + .slider {
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  }
+
+  .switch input:checked + .slider::before {
+    transform: translateX(20px);
+    background: var(--bg-deep);
+  }
+
+  .increase-field { display: none; margin-top: 14px; }
+  .increase-field.show { display: block; }
+
+  /* ---------- Run button ---------- */
+
+  .run-btn {
+    width: 100%;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold) 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(184, 145, 47, 0.28), 0 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .run-btn:hover { transform: translateY(-1px); }
+  .run-btn:active { transform: translateY(0); }
+
+  /* ---------- Results ---------- */
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+
+  @media (max-width: 560px) {
+    .stat-grid { grid-template-columns: 1fr; }
+  }
+
+  .stat-card {
+    background: rgba(0,0,0,0.24);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .stat-card .stat-label {
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted-label);
+    margin-bottom: 8px;
+  }
+
+  .stat-card .stat-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: clamp(20px, 4.5vw, 26px);
+  }
+
+  .stat-card.total .stat-value { color: var(--gold-bright); }
+  .stat-card.contrib .stat-value { color: var(--blue); }
+  .stat-card.growth .stat-value { color: var(--mint); }
+
+  .chart-wrap {
+    position: relative;
+    height: 320px;
+    margin-top: 20px;
+  }
+
+  .chart-legend-note {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--body-copy);
+    background: rgba(0,0,0,0.2);
+    border-left: 3px solid var(--mint);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-top: 16px;
+  }
+
+  .chart-legend-note b { color: var(--mint); }
+
+  /* Waiting cost callout */
+
+  .waiting-callout {
+    margin-top: 16px;
+    background: rgba(217, 105, 90, 0.08);
+    border: 1px solid rgba(217, 105, 90, 0.25);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--body-copy);
+  }
+
+  .waiting-callout b { color: var(--rust); }
+
+  /* ---------- Learning Center ---------- */
+
+  .accordion-item {
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .accordion-item:last-child { border-bottom: none; }
+
+  .accordion-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    color: var(--cream);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 15.5px;
+    text-align: left;
+    padding: 16px 4px;
+    cursor: pointer;
+  }
+
+  .accordion-header .chevron {
+    color: var(--gold-bright);
+    font-size: 14px;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .accordion-item.open .chevron { transform: rotate(180deg); }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+
+  .accordion-body-inner {
+    padding: 0 4px 18px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--body-copy);
+  }
+
+  .checklist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .checklist li {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .checklist li::before {
+    content: "✓";
+    color: var(--mint);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ---------- Footer ---------- */
+
+  .footer {
+    margin-top: 26px;
+    text-align: center;
+  }
+
+  .footer .handle {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--gold-bright);
+    margin-bottom: 8px;
+  }
+
+  .footer .disclaimer {
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--footnote);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="app-header">
+    <h1 class="app-title">The "What If" Calculator</h1>
+    <p class="app-subtitle">Model what consistent monthly investing could become. Change the assumptions, watch the gap between "money in" and "money grown" widen.</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="analysis" type="button">What-If Analysis</button>
+    <button class="tab-btn" data-tab="learn" type="button">Learning Center</button>
+  </div>
+
+  <!-- ============ TAB 1: ANALYSIS ============ -->
+  <div class="tab-panel active" id="tab-analysis">
+
+    <div class="card">
+      <h2>Set your scenario</h2>
+      <p class="card-hint">This is a sandbox for thinking, not a product recommendation. Pick numbers that feel real to you.</p>
+
+      <div class="field">
+        <label for="startAmt">Starting amount <span class="val" id="startAmtVal">$0</span></label>
+        <div class="input-wrap">
+          <span class="prefix">$</span>
+          <input type="number" id="startAmt" value="0" min="0" step="100">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="monthlyAmt">Monthly contribution <span class="val" id="monthlyAmtVal">$300</span></label>
+        <div class="input-wrap">
+          <span class="prefix">$</span>
+          <input type="number" id="monthlyAmt" value="300" min="0" step="25">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="rate">Expected annual return <span class="val" id="rateVal">8%</span></label>
+        <div class="input-wrap">
+          <input type="number" id="rate" value="8" min="0" max="30" step="0.5" class="has-suffix">
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="years">Time horizon <span class="val" id="yearsVal">20 years</span></label>
+        <input type="range" id="years" min="1" max="60" value="20" step="1">
+        <div class="range-scale"><span>1 yr</span><span>60 yrs</span></div>
+      </div>
+
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Increase contribution over time</div>
+          <div class="toggle-sub">Model raises by bumping your monthly amount each year</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="increaseToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="increase-field" id="increaseField">
+        <div class="field" style="margin-bottom:0;">
+          <label for="increaseRate">Annual contribution increase <span class="val" id="increaseRateVal">3%</span></label>
+          <div class="input-wrap">
+            <input type="number" id="increaseRate" value="3" min="0" max="20" step="0.5" class="has-suffix">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="run-btn" id="runBtn" type="button">Run Analysis</button>
+
+    <div class="card" style="margin-top:18px;">
+      <h2>Results</h2>
+      <p class="card-hint">Over <span id="resultsYears">20</span> years</p>
+
+      <div class="stat-grid">
+        <div class="stat-card total">
+          <div class="stat-label">Total value</div>
+          <div class="stat-value" id="statTotal">$0</div>
+        </div>
+        <div class="stat-card contrib">
+          <div class="stat-label">You contributed</div>
+          <div class="stat-value" id="statContrib">$0</div>
+        </div>
+        <div class="stat-card growth">
+          <div class="stat-label">Growth earned</div>
+          <div class="stat-value" id="statGrowth">$0</div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <canvas id="growthChart"></canvas>
+      </div>
+
+      <div class="chart-legend-note">
+        <b>The gap between the lines</b> is compounding doing the work — money your money made, without you adding another dollar.
+      </div>
+
+      <div class="waiting-callout" id="waitingCallout"></div>
+    </div>
+  </div>
+
+  <!-- ============ TAB 2: LEARNING CENTER ============ -->
+  <div class="tab-panel" id="tab-learn">
+    <div class="card">
+      <h2 style="margin-bottom:14px;">Before you touch the calculator</h2>
+
+      <div class="accordion-item open">
+        <button class="accordion-header" type="button">
+          Compound interest <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Compound interest is growth on your growth — you earn returns not just on what you put in, but on every gain you've already made. That's why the curve bends upward instead of climbing in a straight line: each year's gains become part of next year's base.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Principal vs. contributions vs. growth <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <b>Principal</b> is the lump sum you start with. <b>Contributions</b> are what you keep adding over time. <b>Growth</b> is everything above those two — the return your money generates on its own. The calculator's stat cards split your ending balance into exactly these pieces.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Average annual return <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            The return rate you set here is a smooth average — real markets don't move in a straight line. A "9% average" might mean +22% one year and -8% the next. This tool assumes a constant rate to teach the shape of compounding, not to predict any single year.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Why time matters more than timing <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Starting early beats starting big. Money invested sooner has more compounding cycles behind it, and each cycle builds on the last — so a few early years can outweigh a much larger contribution made later. Try shifting the time horizon slider and watch how much the ending value moves.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Dollar-cost averaging <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Investing a fixed amount on a regular schedule — like a monthly contribution — means you automatically buy more when prices are low and less when they're high, without trying to time the market. It's less about maximizing any single purchase and more about staying consistent.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Risk vs. return <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Higher potential returns generally come with more short-term ups and downs, not a guarantee of more money. A higher return rate in this calculator isn't "the better setting" — it's a trade-off you'd be accepting in real life, usually in exchange for more volatility along the way.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Inflation <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            Every number in this tool is <b>nominal</b> — actual future dollars, not adjusted for inflation or fees. A dollar 30 years from now won't buy what it buys today, so treat the ending balance as a measure of growth, not as today's purchasing power.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" type="button">
+          Before you invest: a short checklist <span class="chevron">▾</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <ul class="checklist">
+              <li>Build an emergency fund first — cash for 3-6 months of expenses, kept somewhere accessible.</li>
+              <li>Know your timeline — money you need in the next couple of years usually doesn't belong in the market.</li>
+              <li>Understand what you're actually invested in before you put money into it.</li>
+              <li>Pay down high-interest debt — a guaranteed "return" that's hard for investing to beat.</li>
+              <li>Only invest what you can leave alone through a downturn.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="handle">@learntolovemoney</div>
+    <p class="disclaimer">For educational purposes only. Not investment advice. Assumes a constant annual return, which is not realistic — real markets fluctuate year to year. Past performance does not guarantee future results. Figures shown are nominal (not adjusted for inflation or fees).</p>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Element refs ----------
+  var startAmtEl = document.getElementById('startAmt');
+  var monthlyAmtEl = document.getElementById('monthlyAmt');
+  var rateEl = document.getElementById('rate');
+  var yearsEl = document.getElementById('years');
+  var increaseToggleEl = document.getElementById('increaseToggle');
+  var increaseFieldEl = document.getElementById('increaseField');
+  var increaseRateEl = document.getElementById('increaseRate');
+  var runBtn = document.getElementById('runBtn');
+
+  var chartCanvas = document.getElementById('growthChart');
+  var chart = null;
+
+  // ---------- Formatting helpers ----------
+  function fmtMoney(n, compact) {
+    if (compact === undefined) compact = false;
+    n = Math.round(n);
+    if (compact && Math.abs(n) >= 1000) {
+      return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+    return '$' + n.toLocaleString('en-US');
+  }
+
+  // ---------- Live label updates ----------
+  function updateLiveLabels() {
+    document.getElementById('startAmtVal').textContent = fmtMoney(+startAmtEl.value || 0);
+    document.getElementById('monthlyAmtVal').textContent = fmtMoney(+monthlyAmtEl.value || 0);
+    document.getElementById('rateVal').textContent = (+rateEl.value || 0) + '%';
+    document.getElementById('yearsVal').textContent = yearsEl.value + (yearsEl.value == 1 ? ' year' : ' years');
+    document.getElementById('increaseRateVal').textContent = (+increaseRateEl.value || 0) + '%';
+  }
+
+  [startAmtEl, monthlyAmtEl, rateEl, increaseRateEl].forEach(function (el) {
+    el.addEventListener('input', updateLiveLabels);
+  });
+
+  yearsEl.addEventListener('input', function () {
+    updateLiveLabels();
+    runAnalysis(); // slider feels live
+  });
+
+  increaseToggleEl.addEventListener('change', function () {
+    increaseFieldEl.classList.toggle('show', increaseToggleEl.checked);
+    runAnalysis();
+  });
+
+  runBtn.addEventListener('click', runAnalysis);
+
+  // ---------- Core projection math ----------
+  // Monthly compounding: each month, existing balance earns 1/12 of the annual
+  // rate, then that month's contribution is added. Contribution amount can step
+  // up once per year if the "annual increase" toggle is on.
+  function project(startAmount, monthlyContribution, annualRatePct, years, annualIncreasePct) {
+    var monthlyRate = (annualRatePct / 100) / 12;
+    var months = years * 12;
+
+    var balance = startAmount;
+    var totalContributed = startAmount;
+    var currentMonthly = monthlyContribution;
+
+    // yearly snapshots for the chart, index 0 = year 0 (starting point)
+    var yearBalances = [balance];
+    var yearContributions = [totalContributed];
+
+    for (var m = 1; m <= months; m++) {
+      balance = balance * (1 + monthlyRate) + currentMonthly;
+      totalContributed += currentMonthly;
+
+      if (m % 12 === 0) {
+        yearBalances.push(balance);
+        yearContributions.push(totalContributed);
+        if (annualIncreasePct > 0) {
+          currentMonthly = currentMonthly * (1 + annualIncreasePct / 100);
+        }
+      }
+    }
+
+    return {
+      finalBalance: balance,
+      totalContributed: totalContributed,
+      yearBalances: yearBalances,
+      yearContributions: yearContributions
+    };
+  }
+
+  // ---------- Render ----------
+  function runAnalysis() {
+    var startAmount = Math.max(0, +startAmtEl.value || 0);
+    var monthly = Math.max(0, +monthlyAmtEl.value || 0);
+    var rate = Math.max(0, +rateEl.value || 0);
+    var years = +yearsEl.value || 1;
+    var increaseOn = increaseToggleEl.checked;
+    var increaseRate = increaseOn ? Math.max(0, +increaseRateEl.value || 0) : 0;
+
+    var result = project(startAmount, monthly, rate, years, increaseRate);
+    var growth = result.finalBalance - result.totalContributed;
+
+    document.getElementById('resultsYears').textContent = years;
+    document.getElementById('statTotal').textContent = fmtMoney(result.finalBalance);
+    document.getElementById('statContrib').textContent = fmtMoney(result.totalContributed);
+    document.getElementById('statGrowth').textContent = fmtMoney(growth);
+
+    renderChart(result, years);
+    renderWaitingCallout(startAmount, monthly, rate, years, increaseRate);
+  }
+
+  function renderChart(result, years) {
+    var labels = [];
+    for (var y = 0; y <= years; y++) labels.push(y === 0 ? 'Start' : 'Yr ' + y);
+
+    var data = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Your contributions (no growth)',
+          data: result.yearContributions,
+          borderColor: '#5FA8D3',
+          backgroundColor: 'rgba(95,168,211,0.08)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          tension: 0,
+          fill: false
+        },
+        {
+          label: 'Actual growth (with compounding)',
+          data: result.yearBalances,
+          borderColor: '#7FD9A8',
+          backgroundColor: 'rgba(127,217,168,0.15)',
+          borderWidth: 3,
+          pointRadius: 0,
+          tension: 0.25,
+          fill: true
+        }
+      ]
+    };
+
+    var options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: '#C7D0C9', font: { family: 'Liberation Sans, sans-serif', size: 11.5 }, boxWidth: 14, padding: 14 }
+        },
+        tooltip: {
+          backgroundColor: '#0E2016',
+          borderColor: 'rgba(184,145,47,0.3)',
+          borderWidth: 1,
+          titleColor: '#F5F1E6',
+          bodyColor: '#C7D0C9',
+          callbacks: {
+            label: function (ctx) {
+              return ctx.dataset.label + ': ' + fmtMoney(ctx.parsed.y);
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#8FA096', maxRotation: 0, autoSkip: true, font: { size: 10.5 } },
+          grid: { color: 'rgba(255,255,255,0.05)' }
+        },
+        y: {
+          ticks: {
+            color: '#8FA096',
+            font: { size: 10.5 },
+            callback: function (v) { return fmtMoney(v, true); }
+          },
+          grid: { color: 'rgba(255,255,255,0.06)' }
+        }
+      }
+    };
+
+    if (chart) {
+      chart.data = data;
+      chart.options = options;
+      chart.update();
+    } else {
+      chart = new Chart(chartCanvas.getContext('2d'), { type: 'line', data: data, options: options });
+    }
+  }
+
+  function renderWaitingCallout(startAmount, monthly, rate, years, increaseRate) {
+    var callout = document.getElementById('waitingCallout');
+    if (years <= 5) {
+      callout.style.display = 'none';
+      return;
+    }
+    var delayedYears = years - 5;
+    var full = project(startAmount, monthly, rate, years, increaseRate).finalBalance;
+    var delayed = project(startAmount, monthly, rate, delayedYears, increaseRate).finalBalance;
+    var cost = full - delayed;
+
+    callout.style.display = 'block';
+    callout.innerHTML = '<b>Cost of waiting:</b> starting 5 years later — same monthly amount, same return — would leave you with about <b>' +
+      fmtMoney(cost) + ' less</b> at the end of this horizon (' + fmtMoney(delayed) + ' instead of ' + fmtMoney(full) + ').';
+  }
+
+  // ---------- Accordion ----------
+  document.querySelectorAll('.accordion-item').forEach(function (item) {
+    var header = item.querySelector('.accordion-header');
+    var body = item.querySelector('.accordion-body');
+
+    function setState(open) {
+      if (open) {
+        item.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      } else {
+        item.classList.remove('open');
+        body.style.maxHeight = 0;
+      }
+    }
+
+    setState(item.classList.contains('open'));
+
+    header.addEventListener('click', function () {
+      var willOpen = !item.classList.contains('open');
+      setState(willOpen);
+    });
+  });
+
+  // ---------- Tabs ----------
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- Init ----------
+  updateLiveLabels();
+  runAnalysis();
+})();
+</script>
+
+</body>
+</html>
