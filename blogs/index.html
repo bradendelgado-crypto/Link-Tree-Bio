@@ -1,30 +1,25 @@
 <!--
   ============================================================================
-  LEARN TO LOVE MONEY — BLOG
+  LEARN TO LOVE MONEY — BLOG (LISTING PAGE)
   ============================================================================
-  Single-file, no-build blog page. Matches the link-in-bio brand system.
+  Single-file, no-build blog index. Matches the link-in-bio brand system.
+  This page only shows PREVIEW cards — title, date, one-line teaser. Each
+  card links out to that post's own full page.
 
   HOW TO ADD A NEW FREE POST
   ----------------------------------------------------------------------------
-  Copy a whole "post-card" block (look for the POST comment markers) and
-  edit the title, date, and body paragraphs. Free posts go above the
-  "LOCKED POSTS" divider, newest first.
+  1. Copy an existing post page (e.g. knowledge-equality.html) to a new
+     file in this same folder, and edit its title/date/body.
+  2. Copy a "PREVIEW CARD (free)" block below, point its href at the new
+     file, and edit the title/date/teaser. Free posts go above the
+     "Unlock with your email" divider, newest first.
 
   HOW TO ADD A NEW LOCKED POST
   ----------------------------------------------------------------------------
-  Copy a whole "locked-post-card" block. Edit the title, date, and the
-  visible teaser paragraph. The rest of the body (inside
-  .locked-body-content) is blurred and hidden behind the email gate until
-  the reader unlocks it.
-
-  HOW THE EMAIL GATE WORKS (v1 — no backend)
-  ----------------------------------------------------------------------------
-  This is a placeholder gate: entering any email and clicking "Unlock"
-  reveals every locked post in THIS browser only (saved to localStorage,
-  key "ltlm_blog_unlocked"). No email is actually sent or stored anywhere
-  yet. When you're ready to actually collect emails, swap the JS submit
-  handler for a real form action (Mailchimp/ConvertKit/Beehiiv/etc.) —
-  see the "UNLOCK FORM" section in the <script> below.
+  1. Copy next-post-locked.html to a new file and edit its title/date/body
+     (the locked post page itself contains the email gate + unlock JS).
+  2. Copy a "PREVIEW CARD (locked)" block below, point its href at the new
+     file, and edit the title/date/teaser.
   ============================================================================
 -->
 <!doctype html>
@@ -135,49 +130,13 @@
     margin: 0;
   }
 
-  /* ---------- Post cards (free) ---------- */
-
-  .post {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 26px 24px;
-    margin-bottom: 20px;
-  }
-
-  .post-date {
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gold-bright);
-    margin: 0 0 10px;
-  }
-
-  .post-title {
-    font-family: var(--font-head);
-    font-size: 22px;
-    line-height: 1.3;
-    color: var(--cream);
-    margin: 0 0 14px;
-  }
-
-  .post-body p {
-    font-size: 14.5px;
-    line-height: 1.7;
-    color: var(--body-copy);
-    margin: 0 0 14px;
-  }
-
-  .post-body p:last-child { margin-bottom: 0; }
-
-  /* ---------- Divider between free and locked posts ---------- */
+  /* ---------- Divider between free and locked previews ---------- */
 
   .locked-divider {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 34px 0 20px;
+    margin: 30px 0 20px;
     color: var(--footnote);
     font-size: 11px;
     font-weight: 600;
@@ -193,124 +152,87 @@
     background: rgba(143, 160, 150, 0.16);
   }
 
-  /* ---------- Locked post cards ---------- */
+  /* ---------- Preview cards ---------- */
 
-  .locked-post {
-    position: relative;
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+
+  .post-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 26px 24px;
-    margin-bottom: 20px;
-    overflow: hidden;
+    border-radius: 16px;
+    transition: border-color 0.15s ease, transform 0.1s ease, background 0.15s ease;
   }
 
-  .locked-body-content {
-    filter: blur(6px);
-    user-select: none;
-    pointer-events: none;
-    transition: filter 0.2s ease;
+  @media (hover: hover) {
+    .post-card:hover {
+      border-color: var(--gold-bright);
+      background: #122a1e;
+    }
   }
 
-  .locked-post.unlocked .locked-body-content {
-    filter: none;
-    user-select: auto;
-    pointer-events: auto;
+  .post-card:active {
+    transform: scale(0.98);
+    border-color: var(--mint);
   }
 
-  .locked-post.unlocked .unlock-gate { display: none; }
+  .post-card:focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 2px;
+  }
 
-  .unlock-gate {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
+  .post-card-text { flex: 1; min-width: 0; }
+
+  .post-card-date {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin-bottom: 7px;
+  }
+
+  .post-card-date.locked {
+    color: var(--muted-label);
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 24px;
-    background: linear-gradient(180deg, rgba(15, 36, 26, 0.55) 0%, rgba(15, 36, 26, 0.97) 42%, var(--card-bg) 68%);
+    gap: 5px;
   }
 
-  .lock-icon {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: rgba(217, 177, 90, 0.12);
-    border: 1px solid rgba(217, 177, 90, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 14px;
-  }
+  .post-card-date.locked svg { width: 10px; height: 10px; fill: var(--muted-label); }
 
-  .lock-icon svg { width: 15px; height: 15px; fill: var(--gold-bright); }
-
-  .unlock-title {
+  .post-card-title {
     font-family: var(--font-head);
     font-size: 17px;
     color: var(--cream);
-    margin: 0 0 6px;
+    margin: 0 0 4px;
+    line-height: 1.3;
   }
 
-  .unlock-sub {
-    font-size: 13px;
-    color: var(--muted-label);
-    margin: 0 0 18px;
-    max-width: 280px;
+  .post-card-teaser {
+    font-size: 13.5px;
+    color: var(--body-copy);
+    margin: 0;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
-  .unlock-form {
-    display: flex;
-    width: 100%;
-    max-width: 300px;
-    gap: 8px;
-  }
-
-  .unlock-form input[type="email"] {
-    flex: 1;
-    min-width: 0;
-    background: rgba(0,0,0,0.28);
-    border: 1px solid var(--card-border);
-    border-radius: 10px;
-    color: var(--cream);
-    font-family: var(--font-body);
-    font-size: 14px;
-    padding: 11px 12px;
-  }
-
-  .unlock-form input[type="email"]:focus {
-    outline: none;
-    border-color: var(--gold-bright);
-  }
-
-  .unlock-form button {
+  .chevron {
     flex-shrink: 0;
-    font-family: var(--font-head);
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--bg-deep);
-    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-    border: none;
-    border-radius: 10px;
-    padding: 11px 16px;
-    cursor: pointer;
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--muted-label);
+    border-bottom: 2px solid var(--muted-label);
+    transform: rotate(-45deg);
   }
-
-  .unlock-note {
-    font-size: 10.5px;
-    color: var(--footnote);
-    margin: 10px 0 0;
-  }
-
-  .unlock-error {
-    font-size: 12px;
-    color: var(--rust);
-    margin: 8px 0 0;
-    display: none;
-  }
-
-  .unlock-error.show { display: block; }
 
   /* ---------- Footer ---------- */
 
@@ -341,49 +263,35 @@
     <p class="blog-tagline">Deeper dives on the stuff that doesn't fit in a caption.</p>
   </header>
 
-  <!-- ========================= POST 1 (free) — edit here ========================= -->
-  <article class="post">
-    <p class="post-date">Coming soon</p>
-    <h2 class="post-title">Welcome to the LTLM Blog</h2>
-    <div class="post-body">
-      <!-- PLACEHOLDER: replace with your real intro post copy when it's ready -->
-      <p>This is the first post — replace this paragraph with your real intro once it's written. Use it to tell readers what this blog is for and what they can expect.</p>
-      <p>Keep paragraphs short. Two or three per post is usually enough for a first read.</p>
-    </div>
-  </article>
+  <!-- ========================= PREVIEW CARD (free) — edit here ========================= -->
+  <div class="stack">
+    <a class="post-card" href="knowledge-equality.html">
+      <div class="post-card-text">
+        <span class="post-card-date">September 2026</span>
+        <p class="post-card-title">Knowledge Equality</p>
+        <p class="post-card-teaser">Wealth inequality persists in part because financial knowledge gets passed down in some families and not others. Here's why that has to change.</p>
+      </div>
+      <span class="chevron"></span>
+    </a>
+  </div>
 
-  <!-- ========================= LOCKED POSTS DIVIDER ========================= -->
+  <!-- ========================= LOCKED PREVIEWS DIVIDER ========================= -->
   <div class="locked-divider">Unlock with your email</div>
 
-  <!-- ========================= LOCKED POST 1 — edit here ========================= -->
-  <article class="locked-post" data-locked-post>
-    <p class="post-date">Coming soon</p>
-    <h2 class="post-title">Your Next Post Title Goes Here</h2>
-    <div class="post-body locked-body-content">
-      <!-- PLACEHOLDER: first paragraph can double as the visible teaser if you
-           move the .unlock-gate below it instead of overlaying the whole card -->
-      <p>Replace this with the opening of your locked post. Readers will see this blurred until they unlock it.</p>
-      <p>Add as many paragraphs as you like — everything in this block stays hidden until the gate is unlocked.</p>
-      <p>Once unlocked in this browser, the reader won't be asked again on their next visit.</p>
-    </div>
-
-    <div class="unlock-gate">
-      <div class="lock-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/></svg>
+  <!-- ========================= PREVIEW CARD (locked) — edit here ========================= -->
+  <div class="stack">
+    <a class="post-card" href="next-post-locked.html">
+      <div class="post-card-text">
+        <span class="post-card-date locked">
+          <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/></svg>
+          Subscriber-only
+        </span>
+        <p class="post-card-title">Your Next Post Title Goes Here</p>
+        <p class="post-card-teaser">Replace this with a one-line teaser for the locked post — enough to earn the click, not enough to give it away.</p>
       </div>
-      <p class="unlock-title">This post is subscriber-only</p>
-      <p class="unlock-sub">Drop your email to unlock it — and everything else we post here.</p>
-
-      <!-- UNLOCK FORM: v1 has no real backend, see the note at the top of this
-           file for how to wire this to a real email list later -->
-      <form class="unlock-form" data-unlock-form>
-        <input type="email" placeholder="you@email.com" required aria-label="Email address" />
-        <button type="submit">Unlock</button>
-      </form>
-      <p class="unlock-error" data-unlock-error>Enter a valid email to unlock.</p>
-      <p class="unlock-note">No spam. Unsubscribe anytime.</p>
-    </div>
-  </article>
+      <span class="chevron"></span>
+    </a>
+  </div>
 
 </div>
 
@@ -392,64 +300,7 @@
 </footer>
 
 <script>
-(function () {
-  "use strict";
-
   document.getElementById('ltlm-year').textContent = new Date().getFullYear();
-
-  var STORAGE_KEY = 'ltlm_blog_unlocked';
-
-  function isUnlocked() {
-    try {
-      return localStorage.getItem(STORAGE_KEY) === 'true';
-    } catch (e) {
-      return false;
-    }
-  }
-
-  function setUnlocked() {
-    try {
-      localStorage.setItem(STORAGE_KEY, 'true');
-    } catch (e) {
-      /* localStorage unavailable — gate just won't persist across visits */
-    }
-  }
-
-  function revealAllLockedPosts() {
-    document.querySelectorAll('[data-locked-post]').forEach(function (post) {
-      post.classList.add('unlocked');
-    });
-  }
-
-  if (isUnlocked()) {
-    revealAllLockedPosts();
-  }
-
-  document.querySelectorAll('[data-unlock-form]').forEach(function (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var input = form.querySelector('input[type="email"]');
-      var errorEl = form.parentElement.querySelector('[data-unlock-error]');
-      var email = input.value.trim();
-
-      // Simple client-side sanity check — not real validation
-      var looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-      if (!looksLikeEmail) {
-        if (errorEl) errorEl.classList.add('show');
-        return;
-      }
-
-      if (errorEl) errorEl.classList.remove('show');
-
-      // TODO: replace this block with a real submit to your email list
-      // provider once one is set up. For now this only unlocks the post
-      // in this browser — no email is sent or stored anywhere.
-      setUnlocked();
-      revealAllLockedPosts();
-    });
-  });
-})();
 </script>
 
 </body>

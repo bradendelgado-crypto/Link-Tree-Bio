@@ -1,0 +1,366 @@
+<!--
+  ============================================================================
+  LEARN TO LOVE MONEY — BLOG POST (LOCKED TEMPLATE)
+  ============================================================================
+  Full post page for a subscriber-only post. Linked from the preview card
+  on blogs/index.html.
+
+  HOW THE EMAIL GATE WORKS (v1 — no backend)
+  ----------------------------------------------------------------------------
+  This is a placeholder gate: entering any validly-formatted email and
+  clicking "Unlock" reveals the post in THIS browser only (saved to
+  localStorage, key "ltlm_blog_unlocked" — shared across all locked posts,
+  so unlocking one unlocks them all). No email is actually sent or stored
+  anywhere yet. When you're ready to actually collect emails, swap the JS
+  submit handler for a real form action (Mailchimp/ConvertKit/Beehiiv/etc.)
+  — see the "UNLOCK FORM" section in the <script> below.
+
+  TO REUSE THIS TEMPLATE FOR A NEW LOCKED POST
+  ----------------------------------------------------------------------------
+  Copy this whole file to a new filename, edit the title/date/teaser/body,
+  then add a matching preview card on blogs/index.html pointing at it.
+  ============================================================================
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Your Next Post Title Goes Here — Learn to Love Money</title>
+<meta name="description" content="Subscriber-only post from Learn to Love Money." />
+<meta name="theme-color" content="#0C1F16" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gelasio:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg-base: #0C1F16;
+    --bg-mid: #0A1A13;
+    --bg-deep: #060F0B;
+
+    --gold: #B8912F;
+    --gold-bright: #D9B15A;
+    --mint: #7FD9A8;
+    --blue: #5FA8D3;
+    --rust: #D9695A;
+
+    --cream: #F5F1E6;
+    --body-copy: #C7D0C9;
+    --muted-label: #8FA096;
+    --footnote: #6E7D74;
+
+    --card-bg: #0F241A;
+    --card-border: rgba(184, 145, 47, 0.22);
+
+    --font-head: 'Gelasio', Georgia, 'Times New Roman', serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Liberation Sans', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--body-copy);
+    background:
+      radial-gradient(120% 60% at 50% 0%, rgba(184, 145, 47, 0.08), transparent 60%),
+      linear-gradient(180deg, var(--bg-base) 0%, var(--bg-mid) 55%, var(--bg-deep) 100%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 32px 20px 40px;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted-label);
+    margin-bottom: 22px;
+  }
+
+  .back-link .arrow {
+    width: 7px;
+    height: 7px;
+    border-left: 2px solid var(--muted-label);
+    border-bottom: 2px solid var(--muted-label);
+    transform: rotate(45deg);
+  }
+
+  @media (hover: hover) {
+    .back-link:hover { color: var(--gold-bright); }
+    .back-link:hover .arrow { border-color: var(--gold-bright); }
+  }
+
+  /* ---------- Locked post ---------- */
+
+  .locked-post {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    overflow: hidden;
+  }
+
+  .post-date {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin: 0 0 10px;
+  }
+
+  .post-title {
+    font-family: var(--font-head);
+    font-size: 26px;
+    line-height: 1.3;
+    color: var(--cream);
+    margin: 0 0 18px;
+  }
+
+  .post-body p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--body-copy);
+    margin: 0 0 16px;
+  }
+
+  .post-body p:last-child { margin-bottom: 0; }
+
+  .locked-body-content {
+    filter: blur(6px);
+    user-select: none;
+    pointer-events: none;
+    transition: filter 0.2s ease;
+    min-height: 260px;
+  }
+
+  .locked-post.unlocked .locked-body-content {
+    filter: none;
+    user-select: auto;
+    pointer-events: auto;
+    min-height: 0;
+  }
+
+  .locked-post.unlocked .unlock-gate { display: none; }
+
+  .unlock-gate {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    background: linear-gradient(180deg, rgba(15, 36, 26, 0.55) 0%, rgba(15, 36, 26, 0.97) 42%, var(--card-bg) 68%);
+  }
+
+  .lock-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(217, 177, 90, 0.12);
+    border: 1px solid rgba(217, 177, 90, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+
+  .lock-icon svg { width: 15px; height: 15px; fill: var(--gold-bright); }
+
+  .unlock-title {
+    font-family: var(--font-head);
+    font-size: 17px;
+    color: var(--cream);
+    margin: 0 0 6px;
+  }
+
+  .unlock-sub {
+    font-size: 13px;
+    color: var(--muted-label);
+    margin: 0 0 18px;
+    max-width: 280px;
+  }
+
+  .unlock-form {
+    display: flex;
+    width: 100%;
+    max-width: 300px;
+    gap: 8px;
+  }
+
+  .unlock-form input[type="email"] {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0,0,0,0.28);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 11px 12px;
+  }
+
+  .unlock-form input[type="email"]:focus {
+    outline: none;
+    border-color: var(--gold-bright);
+  }
+
+  .unlock-form button {
+    flex-shrink: 0;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    border: none;
+    border-radius: 10px;
+    padding: 11px 16px;
+    cursor: pointer;
+  }
+
+  .unlock-note {
+    font-size: 10.5px;
+    color: var(--footnote);
+    margin: 10px 0 0;
+  }
+
+  .unlock-error {
+    font-size: 12px;
+    color: var(--rust);
+    margin: 8px 0 0;
+    display: none;
+  }
+
+  .unlock-error.show { display: block; }
+
+  footer {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(143, 160, 150, 0.14);
+    text-align: center;
+  }
+
+  .copyright {
+    font-size: 11.5px;
+    color: var(--footnote);
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back-link" href="index.html">
+    <span class="arrow"></span>
+    Back to the Blog
+  </a>
+
+  <!-- ========================= LOCKED POST — edit here ========================= -->
+  <article class="locked-post" data-locked-post>
+    <p class="post-date">Coming soon</p>
+    <h1 class="post-title">Your Next Post Title Goes Here</h1>
+    <div class="post-body locked-body-content">
+      <!-- PLACEHOLDER: replace with the real body once it's written -->
+      <p>Replace this with the opening of your locked post. Readers will see this blurred until they unlock it.</p>
+      <p>Add as many paragraphs as you like — everything in this block stays hidden until the gate is unlocked.</p>
+      <p>Once unlocked in this browser, the reader won't be asked again on their next visit.</p>
+    </div>
+
+    <div class="unlock-gate">
+      <div class="lock-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/></svg>
+      </div>
+      <p class="unlock-title">This post is subscriber-only</p>
+      <p class="unlock-sub">Drop your email to unlock it — and everything else we post here.</p>
+
+      <!-- UNLOCK FORM: v1 has no real backend, see the note at the top of this
+           file for how to wire this to a real email list later -->
+      <form class="unlock-form" data-unlock-form>
+        <input type="email" placeholder="you@email.com" required aria-label="Email address" />
+        <button type="submit">Unlock</button>
+      </form>
+      <p class="unlock-error" data-unlock-error>Enter a valid email to unlock.</p>
+      <p class="unlock-note">No spam. Unsubscribe anytime.</p>
+    </div>
+  </article>
+
+</div>
+
+<footer>
+  <p class="copyright">&copy; <span id="ltlm-year">2026</span> Learn to Love Money · @learntolovemoney</p>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  document.getElementById('ltlm-year').textContent = new Date().getFullYear();
+
+  var STORAGE_KEY = 'ltlm_blog_unlocked';
+
+  function isUnlocked() {
+    try {
+      return localStorage.getItem(STORAGE_KEY) === 'true';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setUnlocked() {
+    try {
+      localStorage.setItem(STORAGE_KEY, 'true');
+    } catch (e) {
+      /* localStorage unavailable — gate just won't persist across visits */
+    }
+  }
+
+  var post = document.querySelector('[data-locked-post]');
+
+  if (isUnlocked()) {
+    post.classList.add('unlocked');
+  }
+
+  document.querySelectorAll('[data-unlock-form]').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = form.querySelector('input[type="email"]');
+      var errorEl = form.parentElement.querySelector('[data-unlock-error]');
+      var email = input.value.trim();
+
+      // Simple client-side sanity check — not real validation
+      var looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      if (!looksLikeEmail) {
+        if (errorEl) errorEl.classList.add('show');
+        return;
+      }
+
+      if (errorEl) errorEl.classList.remove('show');
+
+      // TODO: replace this block with a real submit to your email list
+      // provider once one is set up. For now this only unlocks the post
+      // in this browser — no email is sent or stored anywhere.
+      setUnlocked();
+      post.classList.add('unlocked');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
