@@ -5,15 +5,14 @@
   Full post page for a subscriber-only post. Linked from the preview card
   on blogs/index.html.
 
-  HOW THE EMAIL GATE WORKS (v1 — no backend)
+  HOW THE EMAIL GATE WORKS
   ----------------------------------------------------------------------------
-  This is a placeholder gate: entering any validly-formatted email and
-  clicking "Unlock" reveals the post in THIS browser only (saved to
-  localStorage, key "ltlm_blog_unlocked" — shared across all locked posts,
-  so unlocking one unlocks them all). No email is actually sent or stored
-  anywhere yet. When you're ready to actually collect emails, swap the JS
-  submit handler for a real form action (Mailchimp/ConvertKit/Beehiiv/etc.)
-  — see the "UNLOCK FORM" section in the <script> below.
+  Entering a validly-formatted email and clicking "Unlock" does two things:
+  1. Sends the email to the same Google Sheet the Investor Type Quiz uses
+     (via window.LTLM.submitLead in assets/site.js), tagged "Blog Unlock".
+  2. Reveals the post in THIS browser (saved to localStorage, key
+     "ltlm_blog_unlocked" — shared across all locked posts, so unlocking
+     one unlocks them all).
 
   TO REUSE THIS TEMPLATE FOR A NEW LOCKED POST
   ----------------------------------------------------------------------------
@@ -335,9 +334,10 @@
 
       if (errorEl) errorEl.classList.remove('show');
 
-      // TODO: replace this block with a real submit to your email list
-      // provider once one is set up. For now this only unlocks the post
-      // in this browser — no email is sent or stored anywhere.
+      // Sends to the same lead sheet as the newsletter forms and the
+      // quiz (see assets/site.js). Unlock happens immediately either
+      // way, same opaque-response reasoning as the quiz's own gate.
+      window.LTLM.submitLead(email, 'Blog Unlock');
       setUnlocked();
       post.classList.add('unlocked');
     });
