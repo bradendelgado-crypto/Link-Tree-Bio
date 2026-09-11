@@ -258,7 +258,8 @@ h1, h2, h3 { font-family: var(--font-head); color: var(--cream); margin: 0; }
 /* ============================== RAILS ============================== */
 
 .rail {
-  padding: 40px 0;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .rail-header {
