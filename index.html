@@ -180,9 +180,10 @@
     font-size: 20px;
   }
 
-  .explore-icon.tone-gold { background: rgba(217, 177, 90, 0.14); }
-  .explore-icon.tone-mint { background: rgba(127, 217, 168, 0.14); }
-  .explore-icon.tone-blue { background: rgba(95, 168, 211, 0.14); }
+  .explore-icon.tone-gold { background: rgba(217, 177, 90, 0.14); color: var(--gold-bright); }
+  .explore-icon.tone-mint { background: rgba(127, 217, 168, 0.14); color: var(--mint); }
+  .explore-icon.tone-blue { background: rgba(95, 168, 211, 0.14); color: var(--blue); }
+  .explore-icon svg { width: 22px; height: 22px; }
 
   .explore-tile-title {
     font-family: var(--font-head);
@@ -194,6 +195,64 @@
     font-size: 12.5px;
     color: var(--muted-label);
     line-height: 1.4;
+  }
+
+  /* ---------- Market ticker ---------- */
+
+  .ticker-strip {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .ticker-viewport {
+    overflow: hidden;
+  }
+
+  .ticker-track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 55s linear infinite;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(-50%); }
+    to { transform: translateX(0); }
+  }
+
+  @media (hover: hover) {
+    .ticker-strip:hover .ticker-track { animation-play-state: paused; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker-track { animation: none; }
+  }
+
+  .ticker-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    border-right: 1px solid var(--card-border);
+    flex-shrink: 0;
+  }
+
+  .ticker-name { font-family: var(--font-head); font-weight: 700; font-size: 13.5px; color: var(--cream); white-space: nowrap; }
+  .ticker-sub { font-size: 10px; color: var(--muted-label); white-space: nowrap; margin-top: 1px; }
+
+  .ticker-spark { width: 50px; height: 22px; flex-shrink: 0; }
+
+  .ticker-value-wrap { display: flex; flex-direction: column; align-items: flex-end; }
+  .ticker-value { font-family: var(--font-head); font-weight: 700; font-size: 13.5px; color: var(--cream); white-space: nowrap; }
+  .ticker-change { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-top: 3px; white-space: nowrap; }
+  .ticker-change.up { background: rgba(127, 217, 168, 0.16); color: var(--mint); }
+  .ticker-change.down { background: rgba(217, 105, 90, 0.16); color: var(--rust); }
+
+  .ticker-caption {
+    text-align: center;
+    font-size: 10.5px;
+    color: var(--footnote);
+    margin: 0;
+    padding: 6px 20px 8px;
   }
 </style>
 </head>
@@ -228,6 +287,177 @@
   </div>
 </nav>
 
+<!-- ============================== MARKET TICKER ============================== -->
+<!-- PLACEHOLDER DATA: this is a static site with no backend/API key, so
+     these are illustrative example values, not live market data (see the
+     caption below the strip). To wire up real daily-updated figures later,
+     this would need a serverless function (Vercel supports these) that
+     calls a market-data API on a schedule and writes the values somewhere
+     this page can read them — out of scope for a no-backend static site. -->
+<div class="ticker-strip">
+  <div class="ticker-viewport">
+    <div class="ticker-track">
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">Dow Jones</div>
+          <div class="ticker-sub">Industrial Average</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,18 10,15 20,16 30,10 40,12 52,4"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">52,573.30</div>
+          <div class="ticker-change up">+509.20</div>
+        </div>
+      </div>
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">S&amp;P 500</div>
+          <div class="ticker-sub">Standard &amp; Poor's 500</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,17 10,14 20,15 30,9 40,11 52,5"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">7,656.98</div>
+          <div class="ticker-change up">+65.28</div>
+        </div>
+      </div>
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">NASDAQ</div>
+          <div class="ticker-sub">Composite</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,16 10,17 20,12 30,13 40,7 52,6"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">26,333.04</div>
+          <div class="ticker-change up">+251.31</div>
+        </div>
+      </div>
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">Russell 2000</div>
+          <div class="ticker-sub">Small-cap</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,4 10,8 20,6 30,13 40,11 52,19"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">2,412.67</div>
+          <div class="ticker-change down">-18.44</div>
+        </div>
+      </div>
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">FTSE 100</div>
+          <div class="ticker-sub">London</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,15 10,16 20,11 30,12 40,8 52,5"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">9,184.52</div>
+          <div class="ticker-change up">+32.10</div>
+        </div>
+      </div>
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">Nikkei 225</div>
+          <div class="ticker-sub">Tokyo</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,5 10,9 20,7 30,14 40,12 52,18"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">44,512.80</div>
+          <div class="ticker-change down">-186.35</div>
+        </div>
+      </div>
+      <div class="ticker-item">
+        <div>
+          <div class="ticker-name">DAX</div>
+          <div class="ticker-sub">Frankfurt</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,6 10,10 20,8 30,15 40,13 52,17"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">24,760.15</div>
+          <div class="ticker-change down">-74.92</div>
+        </div>
+      </div>
+
+      <!-- Duplicate sequence so the loop (translateX -50% -> 0) is seamless -->
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">Dow Jones</div>
+          <div class="ticker-sub">Industrial Average</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,18 10,15 20,16 30,10 40,12 52,4"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">52,573.30</div>
+          <div class="ticker-change up">+509.20</div>
+        </div>
+      </div>
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">S&amp;P 500</div>
+          <div class="ticker-sub">Standard &amp; Poor's 500</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,17 10,14 20,15 30,9 40,11 52,5"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">7,656.98</div>
+          <div class="ticker-change up">+65.28</div>
+        </div>
+      </div>
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">NASDAQ</div>
+          <div class="ticker-sub">Composite</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,16 10,17 20,12 30,13 40,7 52,6"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">26,333.04</div>
+          <div class="ticker-change up">+251.31</div>
+        </div>
+      </div>
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">Russell 2000</div>
+          <div class="ticker-sub">Small-cap</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,4 10,8 20,6 30,13 40,11 52,19"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">2,412.67</div>
+          <div class="ticker-change down">-18.44</div>
+        </div>
+      </div>
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">FTSE 100</div>
+          <div class="ticker-sub">London</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--mint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,15 10,16 20,11 30,12 40,8 52,5"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">9,184.52</div>
+          <div class="ticker-change up">+32.10</div>
+        </div>
+      </div>
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">Nikkei 225</div>
+          <div class="ticker-sub">Tokyo</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,5 10,9 20,7 30,14 40,12 52,18"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">44,512.80</div>
+          <div class="ticker-change down">-186.35</div>
+        </div>
+      </div>
+      <div class="ticker-item" aria-hidden="true">
+        <div>
+          <div class="ticker-name">DAX</div>
+          <div class="ticker-sub">Frankfurt</div>
+        </div>
+        <svg class="ticker-spark" viewBox="0 0 52 22" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="0,6 10,10 20,8 30,15 40,13 52,17"/></svg>
+        <div class="ticker-value-wrap">
+          <div class="ticker-value">24,760.15</div>
+          <div class="ticker-change down">-74.92</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="ticker-caption">Illustrative example values — not live market data</p>
+</div>
+
 <!-- ============================== HERO ============================== -->
 <header class="hero">
   <h1 class="hero-title">Making money<br /><span class="accent">make sense.</span></h1>
@@ -246,17 +476,35 @@
   <p class="explore-title">Explore</p>
   <div class="explore-grid">
     <a class="explore-tile" href="tools/index.html">
-      <span class="explore-icon tone-gold">🛠️</span>
+      <span class="explore-icon tone-gold">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="4" y="13" width="4" height="7" rx="1"/>
+          <rect x="10" y="9" width="4" height="11" rx="1"/>
+          <rect x="16" y="5" width="4" height="15" rx="1"/>
+        </svg>
+      </span>
       <span class="explore-tile-title">Tools</span>
       <span class="explore-tile-desc">Interactive calculators to model your money</span>
     </a>
     <a class="explore-tile" href="blogs/index.html">
-      <span class="explore-icon tone-mint">📝</span>
+      <span class="explore-icon tone-mint">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4.5" y="4" width="12" height="16" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <line x1="7.5" y1="9" x2="13.5" y2="9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="7.5" y1="13" x2="11.5" y2="13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M15 15.5l4-4 2 2-4 4h-2z" fill="currentColor"/>
+        </svg>
+      </span>
       <span class="explore-tile-title">Blog</span>
       <span class="explore-tile-desc">Deeper dives on the stuff that doesn't fit in a caption</span>
     </a>
     <a class="explore-tile" href="learning/index.html">
-      <span class="explore-icon tone-blue">🎓</span>
+      <span class="explore-icon tone-blue">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 3.5L2.5 8.5 12 13.5l7.5-4v5.3h1.5V8.5L12 3.5z"/>
+          <path d="M6 12.6v3.9c0 1.5 2.7 2.7 6 2.7s6-1.2 6-2.7v-3.9l-6 3.1-6-3.1z"/>
+        </svg>
+      </span>
       <span class="explore-tile-title">Learning</span>
       <span class="explore-tile-desc">The investor quiz and free lessons on the basics</span>
     </a>
@@ -271,7 +519,7 @@
   </div>
   <div class="rail-grid">
     <a class="content-card" href="blogs/knowledge-equality.html">
-      <div class="card-tile tone-gold">KE</div>
+      <div class="card-tile tone-gold"></div>
       <div class="card-body">
         <p class="card-meta">September 2026</p>
         <p class="card-title-sm">Knowledge Equality</p>
@@ -279,7 +527,11 @@
       </div>
     </a>
     <a class="content-card" href="blogs/next-post-locked.html">
-      <div class="card-tile tone-mint">🔒</div>
+      <div class="card-tile tone-mint">
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor" aria-hidden="true">
+          <path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/>
+        </svg>
+      </div>
       <div class="card-body">
         <p class="card-meta locked">
           <svg viewBox="0 0 24 24"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v3H9V6a3 3 0 0 1 3-3z"/></svg>
@@ -299,7 +551,13 @@
     <a class="rail-viewall" href="tools/index.html">View all →</a>
   </div>
   <a class="list-card" href="what-if-calculator/index.html" target="_blank" rel="noopener">
-    <span class="list-card-icon" style="background: linear-gradient(135deg, var(--gold-bright), var(--gold));">🛠️</span>
+    <span class="list-card-icon" style="background: linear-gradient(135deg, var(--gold-bright), var(--gold));">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+        <rect x="4" y="13" width="4" height="7" rx="1"/>
+        <rect x="10" y="9" width="4" height="11" rx="1"/>
+        <rect x="16" y="5" width="4" height="15" rx="1"/>
+      </svg>
+    </span>
     <div class="list-card-text">
       <span class="list-card-tag">Free tool</span>
       <p class="list-card-title">The "What If" Investment Calculator</p>
@@ -316,7 +574,12 @@
     <a class="rail-viewall" href="learning/index.html">View all →</a>
   </div>
   <a class="list-card" href="https://investor-type-quiz-six.vercel.app" target="_blank" rel="noopener">
-    <span class="list-card-icon" style="background: linear-gradient(135deg, var(--blue), #3f86ad);">🎯</span>
+    <span class="list-card-icon" style="background: linear-gradient(135deg, var(--blue), #3f86ad);">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+        <path d="M9 3.5c-2 0-3.5 1.5-3.5 3.3 0 .3 0 .5.1.8-1.4.6-2.4 2-2.4 3.6 0 1.4.7 2.6 1.8 3.3-.3.5-.5 1.1-.5 1.7 0 1.9 1.6 3.4 3.5 3.4.3 0 .6 0 .9-.1.5 1 1.6 1.7 2.8 1.7V6.8C11.7 5 10.5 3.5 9 3.5z"/>
+        <path d="M15 3.5c2 0 3.5 1.5 3.5 3.3 0 .3 0 .5-.1.8 1.4.6 2.4 2 2.4 3.6 0 1.4-.7 2.6-1.8 3.3.3.5.5 1.1.5 1.7 0 1.9-1.6 3.4-3.5 3.4-.3 0-.6 0-.9-.1-.5 1-1.6 1.7-2.8 1.7V6.8c0-1.8 1.2-3.3 2.7-3.3z"/>
+      </svg>
+    </span>
     <div class="list-card-text">
       <span class="list-card-tag" style="background: var(--blue);">Find your investor type</span>
       <p class="list-card-title">Take the Investor Type Quiz</p>
