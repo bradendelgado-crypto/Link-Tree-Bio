@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investing Profile Quiz</title>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="What's Your Investing Personality?">
+<meta property="og:description" content="8 archetypes. 20 questions. 2 minutes. Take the free quiz to find out.">
+<meta property="og:image" content="https://learntolovemoney.com/quiz/og-image-v2.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://learntolovemoney.com/quiz/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What's Your Investing Personality?">
+<meta name="twitter:description" content="8 archetypes. 20 questions. 2 minutes. Take the free quiz to find out.">
+<meta name="twitter:image" content="https://learntolovemoney.com/quiz/og-image-v2.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* LTLM brand palette */
+    --bg-base: #0C1F16;
+    --bg-mid: #0A1A13;
+    --bg-deep: #060F0B;
+
+    --card-top: #14291D;
+    --card-bottom: #0E2016;
+    --card-border: rgba(184, 145, 47, 0.22);
+    --card-border-hover: rgba(217, 177, 90, 0.55);
+
+    --gold: #B8912F;
+    --gold-bright: #D9B15A;
+    --mint: #7FD9A8;
+    --blue: #5FA8D3;
+    --rust: #D9695A;
+
+    --cream: #F5F1E6;
+    --body-copy: #C7D0C9;
+    --muted-label: #8FA096;
+    --footnote: #6E7D74;
+
+    --font-heading: 'Gelasio', Georgia, serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    background: var(--bg-deep);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, var(--bg-mid) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-base) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+    background-attachment: fixed;
+    color: var(--body-copy);
+    font-family: var(--font-body);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  @media (max-width: 480px) {
+    body {
+      padding: 16px 12px;
+    }
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 2px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--cream);
+  }
+
+  .quiz-container, .results-container {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* ---------- Home screen ---------- */
+
+  .home-container {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 12vh;
+  }
+
+  .home-title {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--cream);
+    font-size: clamp(30px, 6.5vw, 46px);
+    line-height: 1.18;
+    margin: 0 0 18px 0;
+  }
+
+  .home-subtitle {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--body-copy);
+    max-width: 440px;
+    margin: 0 0 36px 0;
+  }
+
+  .take-quiz-btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold) 100%);
+    border: none;
+    border-radius: 999px;
+    padding: 20px 48px;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(184, 145, 47, 0.3), 0 4px 14px rgba(0, 0, 0, 0.35);
+    transition: box-shadow 0.15s ease, filter 0.15s ease;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .take-quiz-btn {
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .take-quiz-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .take-quiz-btn:active {
+      transform: translateY(0) scale(0.99);
+    }
+  }
+
+  .take-quiz-btn:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 14px 36px rgba(184, 145, 47, 0.4), 0 6px 18px rgba(0, 0, 0, 0.4);
+  }
+
+  .home-meta {
+    margin-top: 20px;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: var(--muted-label);
+  }
+
+  /* ---------- Quiz screens ---------- */
+
+  .progress-track {
+    width: 100%;
+    height: 8px;
+    background: var(--card-bottom);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    width: 5%;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    color: var(--muted-label);
+    margin-bottom: 32px;
+    text-align: right;
+  }
+
+  .question-text {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--cream);
+    font-size: clamp(20px, 4vw, 26px);
+    line-height: 1.4;
+    margin: 0 0 28px 0;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .option {
+    background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+    border: 1.5px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--body-copy);
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .option {
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+    }
+
+    .option:hover, .option:active {
+      transform: scale(1.01);
+    }
+  }
+
+  .option:hover {
+    border-color: var(--card-border-hover);
+  }
+
+  .option.selected {
+    border-color: var(--mint);
+    background: linear-gradient(160deg, rgba(127, 217, 168, 0.14), var(--card-bottom));
+    color: var(--cream);
+  }
+
+  .option:focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 2px;
+    border-color: var(--gold-bright);
+  }
+
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .next-btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    border: none;
+    border-radius: 10px;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: filter 0.15s ease, opacity 0.15s ease;
+  }
+
+  .next-btn:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  .next-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .retake-btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--gold-bright);
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    border-radius: 10px;
+    padding: 13px 30px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  }
+
+  .retake-btn:hover {
+    border-color: var(--gold-bright);
+    background: rgba(184, 145, 47, 0.1);
+  }
+
+  /* ---------- Results screen ---------- */
+
+  .results-eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+
+  .archetype-name {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--cream);
+    font-size: clamp(28px, 6vw, 38px);
+    line-height: 1.2;
+    margin: 0 0 16px 0;
+  }
+
+  .archetype-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--body-copy);
+    margin: 0 0 32px 0;
+  }
+
+  .teaser {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--body-copy);
+    margin: 0 0 28px 0;
+  }
+
+  /* ---------- Email gate ---------- */
+
+  .locked-section {
+    position: relative;
+    padding-top: 24px;
+    margin-top: 24px;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .locked-section.locked {
+    max-height: 190px;
+    overflow: hidden;
+    filter: blur(4px);
+    user-select: none;
+    pointer-events: none;
+    transition: filter 0.5s ease;
+  }
+
+  .gate-fade {
+    display: none;
+  }
+
+  .locked-section.locked .gate-fade {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 25%, var(--bg-base) 90%);
+  }
+
+  .email-gate {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: -36px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.4s ease;
+  }
+
+  .email-gate.gate-hidden {
+    opacity: 0;
+  }
+
+  .gate-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--cream);
+    font-size: 16px;
+    margin: 0 0 8px 0;
+  }
+
+  .gate-copy {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--body-copy);
+    margin: 0 0 18px 0;
+  }
+
+  .email-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .email-input {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1.5px solid var(--card-border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--cream);
+  }
+
+  .email-input::placeholder {
+    color: var(--footnote);
+  }
+
+  .email-input:focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 2px;
+    border-color: var(--gold-bright);
+  }
+
+  .email-input[aria-invalid="true"] {
+    border-color: var(--rust);
+  }
+
+  .unlock-btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--bg-deep);
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    border: none;
+    border-radius: 10px;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: filter 0.15s ease, opacity 0.15s ease;
+  }
+
+  .unlock-btn:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  .unlock-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .email-error {
+    font-size: 13px;
+    color: var(--rust);
+    margin: 4px 0 0 0;
+  }
+
+  .email-microcopy {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--footnote);
+    margin: 12px 0 0 0;
+  }
+
+  .full-results {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .full-results.revealed {
+    opacity: 1;
+  }
+
+  .tier-badge {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+  }
+
+  .tier-badge.confirmed {
+    background: rgba(127, 217, 168, 0.16);
+    color: var(--mint);
+  }
+
+  .tier-badge.caveat {
+    background: rgba(184, 145, 47, 0.2);
+    color: var(--gold-bright);
+  }
+
+  .tier-badge.rerouted {
+    background: rgba(217, 105, 90, 0.18);
+    color: var(--rust);
+  }
+
+  .results-section {
+    border-top: 1px solid var(--card-border);
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+
+  .results-section h2 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cream);
+    margin: 0 0 14px 0;
+  }
+
+  .results-section p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--body-copy);
+    margin: 0 0 12px 0;
+  }
+
+  .reason-list {
+    margin: 0 0 4px 0;
+    padding-left: 20px;
+  }
+
+  .reason-list li {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: var(--body-copy);
+  }
+
+  .dimension-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .dimension-table th, .dimension-table td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .dimension-table th {
+    color: var(--muted-label);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .dimension-table td.num {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--blue);
+  }
+
+  .dimension-table th:last-child, .dimension-table td:last-child {
+    color: var(--gold-bright);
+  }
+
+  .dimension-table td.num:last-of-type {
+    color: var(--gold-bright);
+  }
+
+  .tier-note {
+    background: linear-gradient(160deg, var(--card-top), var(--card-bottom));
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--body-copy);
+  }
+
+  .tier-note strong {
+    color: var(--gold-bright);
+  }
+
+  .retake-row {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ---------- QA scoring breakdown ---------- */
+
+  .qa-toggle {
+    margin-top: 8px;
+  }
+
+  .qa-toggle summary {
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--gold-bright);
+    padding: 8px 0;
+    list-style: none;
+  }
+
+  .qa-toggle summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .qa-toggle summary::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 0.15s ease;
+  }
+
+  .qa-toggle[open] summary::before {
+    transform: rotate(90deg);
+  }
+
+  .qa-toggle summary:focus-visible {
+    outline: 2px solid var(--gold-bright);
+    outline-offset: 4px;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .qa-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .qa-table th:last-child, .qa-table td:last-child {
+    width: 84px;
+  }
+
+  .qa-table th, .qa-table td {
+    text-align: left;
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--card-border);
+    white-space: normal;
+    word-break: break-word;
+    vertical-align: middle;
+  }
+
+  .qa-table th {
+    color: var(--muted-label);
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .qa-table td.num {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  .qa-table tr.is-winner {
+    background: rgba(184, 145, 47, 0.08);
+  }
+
+  .qa-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 6px;
+    margin: 3px 6px 0 0;
+  }
+
+  .qa-tag.stage1 {
+    background: rgba(143, 160, 150, 0.16);
+    color: var(--muted-label);
+  }
+
+  .qa-tag.final {
+    background: rgba(184, 145, 47, 0.25);
+    color: var(--gold-bright);
+  }
+
+  /* ---------- Disclaimer ---------- */
+
+  .disclaimer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--footnote);
+  }
+
+  .disclaimer strong {
+    color: var(--muted-label);
+  }
+
+  /* ---------- Mobile-friendly tweaks ---------- */
+
+  @media (max-width: 480px) {
+    .home-container {
+      padding-top: 8vh;
+    }
+
+    .take-quiz-btn {
+      width: 100%;
+      padding: 18px 24px;
+      font-size: 17px;
+    }
+
+    .question-text {
+      margin-bottom: 22px;
+    }
+
+    .option {
+      padding: 14px 16px;
+      font-size: 14px;
+    }
+
+    .next-btn, .retake-btn {
+      width: 100%;
+      padding: 14px 24px;
+    }
+
+    .nav-row {
+      justify-content: stretch;
+    }
+
+    .archetype-name {
+      font-size: 26px;
+    }
+
+    .results-section {
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .dimension-table, .qa-table {
+      font-size: 13px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="home-container" id="homeContainer">
+  <p class="results-eyebrow">Investor Type Quiz</p>
+  <h1 class="home-title">What's Your Investing Personality?</h1>
+  <p class="home-subtitle">Answer 20 quick questions about how you think, feel, and act with money to find out which of 8 investor archetypes fits you best.</p>
+  <button class="take-quiz-btn" id="takeQuizBtn">Take the Quiz</button>
+  <p class="home-meta">8 archetypes · 20 questions · 2 minutes</p>
+</div>
+
+<div class="quiz-container hidden" id="quizContainer">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Question 1 of 20</div>
+
+  <h1 class="question-text" id="questionText"></h1>
+
+  <div class="options" id="optionsContainer"></div>
+
+  <div class="nav-row">
+    <button class="next-btn" id="nextBtn" disabled>Next</button>
+  </div>
+</div>
+
+<div class="results-container hidden" id="resultsContainer"></div>
+
+<script>
+  const questions = [
+    {
+      text: "What appeals to you most when evaluating a potential investment?",
+      options: [
+        { label: "A high-quality, well-run business trading at a fair price that I could hold for decades", scores: { BuffettCompounder: 2 }, reason: "You gravitate toward high-quality, understandable businesses you can hold for decades rather than chasing what's exciting right now." },
+        { label: "A company disrupting its industry with a long runway for growth, even if it's not \"cheap\"", scores: { GrowthChaser: 2 }, reason: "You're drawn to disruptive companies with long growth runways, even when the price isn't obviously cheap." },
+        { label: "A company that pays me steady cash regardless of what the stock price does", scores: { IncomeBuilder: 2 }, reason: "You prioritize investments that pay you steady cash over ones that simply grow in value." },
+        { label: "I'd rather not evaluate individual companies at all", scores: { PassiveOptimizer: 2 }, reason: "You'd rather not pick individual companies at all — broad, hands-off exposure suits you better." },
+        { label: "A reasonably priced company with above-average growth prospects — not the cheapest, not the flashiest", scores: { GARPHybrid: 2 }, reason: "You look for a middle ground — real growth potential at a price that's still reasonable, not the cheapest or the flashiest option." }
+      ]
+    },
+    {
+      text: "A stock has crashed 50% and is deeply out of favor with the market. Your reaction?",
+      options: [
+        { label: "That's exactly where I look — undervalued, unloved, and potentially mispriced", scores: { ContrarianDeepValue: 2 }, reason: "When a stock craters and falls out of favor, you see a mispriced opportunity rather than a warning sign." },
+        { label: "Could be interesting, but only if fundamentals still support solid growth", scores: { GARPHybrid: 1 }, reason: "You're open to buying into weakness, but only when the underlying growth fundamentals still hold up." },
+        { label: "I'd want to see signs of stabilization or an upward trend before touching it", scores: { MomentumTrader: 2 }, reason: "You wait for a stock to show signs of stabilizing or trending back up before getting involved." },
+        { label: "Not my style — I prefer proven, stable businesses, not turnarounds", scores: { BuffettCompounder: 1 }, reason: "You prefer proven, stable businesses over trying to time a turnaround." },
+        { label: "I'd rather stay diversified than pick through the wreckage myself", scores: { PassiveOptimizer: 2 }, reason: "You'd rather stay diversified than sift through distressed situations yourself." }
+      ]
+    },
+    {
+      text: "A stock is surging on strong momentum and heavy media attention. Your instinct?",
+      options: [
+        { label: "That's a signal worth acting on — trends tend to continue", scores: { MomentumTrader: 2 }, reason: "You treat strong price momentum and heavy attention as a signal worth acting on." },
+        { label: "I'd check if the fundamentals justify the price before jumping in", scores: { GARPHybrid: 1 }, reason: "Even when a stock is hot, you check whether the fundamentals actually justify the price before buying." },
+        { label: "Hype makes me cautious — I'd rather wait or avoid it entirely", scores: { BuffettCompounder: 1 }, reason: "Hype makes you cautious, and you'd rather wait out the excitement or avoid it altogether." },
+        { label: "I'd rather own it as a small speculative position, not a core holding", scores: { BarbellAllocator: 2 }, reason: "You're willing to take a small speculative swing on a trending stock, but only as a side bet, not a core holding." },
+        { label: "Doesn't matter to me — I don't react to individual stock news", scores: { PassiveOptimizer: 1 }, reason: "Stock-specific news and hype don't really factor into how you invest." }
+      ]
+    },
+    {
+      text: "How do you feel about paying a premium price for a fast-growing company?",
+      options: [
+        { label: "Worth it if the growth story is real and the runway is long", scores: { GrowthChaser: 2 }, reason: "You're willing to pay a premium for a fast grower as long as the growth story and runway are real." },
+        { label: "Only within reason — I want growth and a defensible price", scores: { GARPHybrid: 2 }, reason: "You want growth, but only within reason — a defensible price still matters to you." },
+        { label: "I'd rather pay fair value for a proven business than a premium for a promise", scores: { BuffettCompounder: 1 }, reason: "You'd rather pay fair value for a proven business than a premium for a promise." },
+        { label: "I'd rather not — overpaying for anything makes me uncomfortable", scores: { ContrarianDeepValue: 1 }, reason: "Overpaying for anything makes you uncomfortable, growth story or not." },
+        { label: "I don't think about individual valuations at all", scores: { PassiveOptimizer: 1 }, reason: "Individual valuations aren't really part of how you think about investing." }
+      ]
+    },
+    {
+      text: "What role does cash income (dividends) play in how you think about investing?",
+      options: [
+        { label: "It's central — I want my portfolio generating income I can see and use", scores: { IncomeBuilder: 2 }, reason: "Generating visible, usable cash income is central to how you think about your portfolio." },
+        { label: "Nice to have, but not a priority — I care more about total growth", scores: { GrowthChaser: 1 }, reason: "Dividends are a nice-to-have, but you care more about total growth than cash income." },
+        { label: "Doesn't matter much either way", scores: { PassiveOptimizer: 1 }, reason: "Dividend income doesn't factor much into your investing decisions either way." },
+        { label: "I'd rather reinvest everything for compounding than take cash out", scores: { BuffettCompounder: 1 }, reason: "You'd rather reinvest everything and let it compound than take cash out along the way." },
+        { label: "I like having some income-generating holdings as a stable \"base\" alongside riskier bets", scores: { BarbellAllocator: 1 }, reason: "You like having some income-generating holdings as a stable base alongside riskier bets." }
+      ]
+    },
+    {
+      text: "How do you feel about holding a small number of concentrated positions vs. broad diversification?",
+      options: [
+        { label: "I'd rather hold a small number of businesses I really understand and believe in", scores: { BuffettCompounder: 2 }, reason: "You'd rather hold a small number of businesses you deeply understand and believe in than spread yourself thin." },
+        { label: "I want broad, low-cost diversification and nothing more", scores: { PassiveOptimizer: 2 }, reason: "Broad, low-cost diversification is enough for you — nothing more concentrated is needed." },
+        { label: "I like a diversified core, with a smaller slice set aside for higher-risk/higher-reward bets", scores: { BarbellAllocator: 2 }, reason: "You like a diversified core with a smaller slice carved out for higher-risk, higher-reward bets." },
+        { label: "I'm comfortable concentrating in names I've researched deeply, even unpopular ones", scores: { ContrarianDeepValue: 1 }, reason: "You're comfortable concentrating in names you've researched deeply, even when they're unpopular." },
+        { label: "I'll concentrate in whatever's working right now, and rotate as that changes", scores: { MomentumTrader: 1 }, reason: "You concentrate in whatever's working right now and rotate as that changes." }
+      ]
+    },
+    {
+      text: "Which best describes how you want to make buy/sell decisions?",
+      options: [
+        { label: "Based on fundamentals — earnings, competitive position, valuation", scores: { GARPHybrid: 1, BuffettCompounder: 1 }, reason: "You make buy and sell decisions based on fundamentals — earnings, competitive position, and valuation." },
+        { label: "Based on price action and trends — what the chart/market is telling me", scores: { MomentumTrader: 2 }, reason: "You make decisions based on price action and what the market/trend is telling you." },
+        { label: "Based on a fund manager's or index's decisions, not my own stock-by-stock calls", scores: { PassiveOptimizer: 2 }, reason: "You'd rather let a fund manager or index make the stock-by-stock calls than do it yourself." },
+        { label: "Based on finding the biggest gap between a stock's price and what I think it's really worth", scores: { ContrarianDeepValue: 2 }, reason: "You look for the biggest gap between a stock's price and what you believe it's really worth." },
+        { label: "Based on identifying long-term secular trends and riding them", scores: { GrowthChaser: 2 }, reason: "You identify long-term secular trends and build positions around riding them." }
+      ]
+    },
+    {
+      text: "If you had to describe your ideal investing outcome in one sentence, which is closest?",
+      options: [
+        { label: "\"I steadily compound wealth by owning great businesses for a long time.\"", scores: { BuffettCompounder: 2 }, reason: "Your ideal outcome is steadily compounding wealth by owning great businesses for a long time." },
+        { label: "\"I catch the next big thing early and let it run.\"", scores: { GrowthChaser: 2 }, reason: "Your ideal outcome is catching the next big thing early and letting it run." },
+        { label: "\"I build a portfolio that pays me, year after year.\"", scores: { IncomeBuilder: 2 }, reason: "Your ideal outcome is building a portfolio that pays you, year after year." },
+        { label: "\"I do as little as possible and still capture market returns.\"", scores: { PassiveOptimizer: 2 }, reason: "Your ideal outcome is doing as little as possible while still capturing market returns." },
+        { label: "\"I mix safety with a few high-conviction, high-upside swings.\"", scores: { BarbellAllocator: 2 }, reason: "Your ideal outcome is mixing safety with a few high-conviction, high-upside swings." }
+      ]
+    }
+  ];
+
+  const stage2Questions = [
+    // Risk Tolerance
+    {
+      dimension: 'Risk',
+      text: "Your portfolio drops 25% in a month. What's your honest reaction?",
+      options: [
+        { label: "I'd sell most or all of it — I can't stomach watching it keep falling", points: 1 },
+        { label: "I'd sell some to reduce my exposure", points: 2 },
+        { label: "I'd leave it alone and wait it out", points: 3 },
+        { label: "I'd hold and probably look at whether it's a buying opportunity", points: 4 },
+        { label: "I'd see it as a sale and put more money in", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Risk',
+      text: "Which statement is closest to how you think about your money?",
+      options: [
+        { label: "My top priority is not losing what I've put in", points: 1 },
+        { label: "I want steady, predictable growth over big swings", points: 2 },
+        { label: "I'm fine with some ups and downs if it means better long-term growth", points: 3 },
+        { label: "I'm comfortable with real volatility in exchange for higher potential returns", points: 4 },
+        { label: "I'd rather chase the biggest possible gains, even if that means big losses are possible too", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Risk',
+      text: "Which of these two hypothetical investments would you choose?",
+      options: [
+        { label: "A guaranteed 4-5%/year return, no volatility", points: 1 },
+        { label: "Mostly steady returns, small chance of a rough year", points: 2 },
+        { label: "A mix — some steady, some higher-upside positions", points: 3 },
+        { label: "Average ~8-10%/year, but with real chance of a rough year or two", points: 4 },
+        { label: "Higher potential returns, but real chance of large swings in either direction", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Risk',
+      text: "When you see market volatility in the news (a big drop, a crash headline, etc.), what's your gut reaction?",
+      options: [
+        { label: "Anxious — I want to check my accounts and consider protecting my money", points: 1 },
+        { label: "Uneasy, but I try not to act on it", points: 2 },
+        { label: "Neutral — it doesn't really change how I feel", points: 3 },
+        { label: "Curious — I start looking for opportunities", points: 4 },
+        { label: "Energized — volatility is part of what makes investing interesting to me", points: 5 }
+      ]
+    },
+    // Time Horizon
+    {
+      dimension: 'Horizon',
+      text: "When do you realistically expect to need this money?",
+      options: [
+        { label: "Within the next 1-2 years", points: 1 },
+        { label: "In the next 3-5 years", points: 2 },
+        { label: "In the next 5-10 years", points: 3 },
+        { label: "10-20 years from now", points: 4 },
+        { label: "20+ years from now / no specific timeline", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Horizon',
+      text: "What's this money mainly earmarked for?",
+      options: [
+        { label: "A near-term expense (house down payment, wedding, emergency fund)", points: 1 },
+        { label: "A mid-term goal I can roughly picture (career change, buying property later)", points: 2 },
+        { label: "A long-term goal without a fixed date (financial independence, \"building wealth\")", points: 3 },
+        { label: "Retirement, decades out", points: 4 },
+        { label: "I don't have a specific goal — this is open-ended, long-term growth", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Horizon',
+      text: "If this account dropped 30% tomorrow, how long could you leave it untouched without needing to withdraw?",
+      options: [
+        { label: "I might need to withdraw within months regardless", points: 1 },
+        { label: "Less than a year", points: 2 },
+        { label: "1-3 years", points: 3 },
+        { label: "3-10 years", points: 4 },
+        { label: "10+ years — I wouldn't need to touch it", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Horizon',
+      text: "How many years until your target goal (retirement, major purchase, etc.)?",
+      options: [
+        { label: "Less than 2 years", points: 1 },
+        { label: "2-5 years", points: 2 },
+        { label: "5-10 years", points: 3 },
+        { label: "10-20 years", points: 4 },
+        { label: "20+ years", points: 5 }
+      ]
+    },
+    // Involvement Level
+    {
+      dimension: 'Involvement',
+      text: "How much time do you want to spend actively managing your investments?",
+      options: [
+        { label: "As close to zero as possible — I want to set it and forget it", points: 1 },
+        { label: "A few minutes a month to check in", points: 2 },
+        { label: "An hour or two a month researching or rebalancing", points: 3 },
+        { label: "Several hours a month — I enjoy digging into companies and trends", points: 4 },
+        { label: "As much time as it takes — I want to be deeply hands-on", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Involvement',
+      text: "Which appeals to you more?",
+      options: [
+        { label: "A single fund that handles everything for me", points: 1 },
+        { label: "A small number of funds I occasionally rebalance", points: 2 },
+        { label: "A mix of funds and a few individual stocks I've chosen", points: 3 },
+        { label: "Mostly individual stocks I've researched myself", points: 4 },
+        { label: "Actively trading individual positions based on ongoing research", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Involvement',
+      text: "How do you feel about reading a company's financial filings (10-Ks, earnings reports) before investing in it?",
+      options: [
+        { label: "That sounds exhausting — I'd rather not", points: 1 },
+        { label: "I'd skim a summary if someone else wrote it", points: 2 },
+        { label: "I'd read the highlights myself", points: 3 },
+        { label: "I'd read the full thing for companies I'm seriously considering", points: 4 },
+        { label: "I find that kind of research genuinely enjoyable", points: 5 }
+      ]
+    },
+    {
+      dimension: 'Involvement',
+      text: "How often do you want to check your portfolio?",
+      options: [
+        { label: "Rarely — maybe once a year", points: 1 },
+        { label: "A few times a year", points: 2 },
+        { label: "Monthly", points: 3 },
+        { label: "Weekly", points: 4 },
+        { label: "Daily or near-daily", points: 5 }
+      ]
+    }
+  ];
+
+  const archetypeIdealProfiles = {
+    PassiveOptimizer: { Risk: 2, Horizon: 4, Involvement: 1 },
+    IncomeBuilder: { Risk: 2, Horizon: 4, Involvement: 2 },
+    BuffettCompounder: { Risk: 3, Horizon: 5, Involvement: 4 },
+    GARPHybrid: { Risk: 3, Horizon: 4, Involvement: 4 },
+    GrowthChaser: { Risk: 5, Horizon: 5, Involvement: 3 },
+    ContrarianDeepValue: { Risk: 4, Horizon: 4, Involvement: 5 },
+    MomentumTrader: { Risk: 4, Horizon: 2, Involvement: 5 },
+    BarbellAllocator: { Risk: 4, Horizon: 4, Involvement: 3 }
+  };
+
+  const archetypeDisplayNames = {
+    PassiveOptimizer: "Passive Optimizer",
+    IncomeBuilder: "Income Builder",
+    BuffettCompounder: "Buffett Compounder",
+    GARPHybrid: "GARP Hybrid",
+    GrowthChaser: "Growth Chaser",
+    ContrarianDeepValue: "Contrarian/Deep Value",
+    MomentumTrader: "Momentum Trader",
+    BarbellAllocator: "Barbell Allocator"
+  };
+
+  const archetypeDescriptions = {
+    BuffettCompounder: "You're drawn to high-quality, well-run businesses that you can understand deeply and hold for the long haul. Rather than chasing trends, you look for durable competitive advantages and fair prices, betting on patience and compounding over time rather than speed.",
+    GrowthChaser: "You're comfortable paying up for a company with a long growth runway, even if it isn't \"cheap\" by traditional measures. You're willing to ride out volatility in exchange for the chance to own tomorrow's category leaders early.",
+    IncomeBuilder: "You prioritize investments that pay you consistently, regardless of what happens to the stock price day to day. Cash flow and stability matter more to you than maximizing total growth.",
+    PassiveOptimizer: "You'd rather capture the market's overall returns with minimal effort than try to pick winners. Low cost, broad diversification, and staying out of your own way are your guiding principles.",
+    GARPHybrid: "You want growth, but you're not willing to overpay for it. You look for companies with real growth potential trading at a reasonable price — a middle path between value discipline and growth investing.",
+    ContrarianDeepValue: "You're drawn to unloved, undervalued, or out-of-favor investments that the broader market has overlooked or overreacted to. You're comfortable being early and being different from the crowd.",
+    MomentumTrader: "You believe trends tend to continue, and you're comfortable acting on price action and market sentiment rather than waiting for a \"story\" to fully play out. This style rewards active attention and quick decision-making.",
+    BarbellAllocator: "You keep a stable, diversified core while carving out a smaller portion of your portfolio for higher-risk, higher-upside bets. This lets you pursue big swings without putting your whole portfolio at risk."
+  };
+
+  const archetypeTeasers = {
+    BuffettCompounder: "You compound wealth patiently by owning great businesses for the long haul.",
+    GrowthChaser: "You chase tomorrow's category leaders early, even when they're not cheap.",
+    IncomeBuilder: "You build a portfolio that pays you steady cash, year after year.",
+    PassiveOptimizer: "You capture the market's returns with minimal effort and maximum simplicity.",
+    GARPHybrid: "You hunt for real growth at a price that still makes sense.",
+    ContrarianDeepValue: "You find opportunity where everyone else sees a mess.",
+    MomentumTrader: "You ride the trend and act while the story is still unfolding.",
+    BarbellAllocator: "You pair a stable core with a few high-conviction, high-upside bets."
+  };
+
+  const EMAIL_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbywlaoZkkPTDIIpYXgf0YwxQmGavEN5T4LQNUlMp_NUrsuEFkBEH5YEj8v5oGIv0EDtPQ/exec";
+
+  const archetypeScores = {
+    BuffettCompounder: 0,
+    GrowthChaser: 0,
+    IncomeBuilder: 0,
+    PassiveOptimizer: 0,
+    GARPHybrid: 0,
+    ContrarianDeepValue: 0,
+    MomentumTrader: 0,
+    BarbellAllocator: 0
+  };
+
+  const totalQuestions = questions.length + stage2Questions.length;
+
+  let currentQuestion = 0;
+  let stage = 1; // 1 = archetype questions, 2 = risk/horizon/involvement questions
+  let selectedOptionIndex = null;
+  let winningArchetype = null;
+
+  // Tie-break state (set right after Stage 1 completes)
+  let stage1Tie = false;
+  let tieCandidates = null; // [archetypeA, archetypeB] when stage1Tie is true
+
+  // Override/reroute state (set after Stage 2 completes)
+  let finalTier = null; // 'confirmed' | 'caveat' | 'rerouted'
+  let finalArchetype = null;
+  let originalArchetype = null; // only meaningfully different from finalArchetype when rerouted
+  let dimensionContributions = null; // dimensions ranked by weighted gap, largest first
+
+  let dimensionAnswers = { Risk: [], Horizon: [], Involvement: [] };
+  let dimensionAverages = { Risk: 0, Horizon: 0, Involvement: 0 };
+  let mismatchScore = null;
+  let stage1AnswerLog = []; // { archetype: points } contributions per answered Stage 1 question, plus reason text
+  let allArchetypeMismatches = []; // [{ archetype, mismatch }] for all 8, computed once Stage 2 is done
+  let emailUnlocked = false; // true once the user has submitted a valid email on the results screen
+
+  const homeContainer = document.getElementById('homeContainer');
+  const takeQuizBtn = document.getElementById('takeQuizBtn');
+  const quizContainer = document.getElementById('quizContainer');
+  const resultsContainer = document.getElementById('resultsContainer');
+  const questionText = document.getElementById('questionText');
+  const optionsContainer = document.getElementById('optionsContainer');
+  const nextBtn = document.getElementById('nextBtn');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+
+  function getRankedArchetypes() {
+    return Object.entries(archetypeScores)
+      .sort((a, b) => b[1] - a[1])
+      .map(([archetype, score]) => ({ archetype, score }));
+  }
+
+  function resolveStage1Result() {
+    const ranked = getRankedArchetypes();
+    const top = ranked[0];
+    const second = ranked[1];
+
+    if (Math.abs(top.score - second.score) <= 1) {
+      stage1Tie = true;
+      tieCandidates = [top.archetype, second.archetype];
+      winningArchetype = null; // decided after Stage 2 mismatch comparison
+    } else {
+      stage1Tie = false;
+      tieCandidates = null;
+      winningArchetype = top.archetype;
+    }
+  }
+
+  function calcMismatch(dimAvg, ideal) {
+    return (
+      2 * Math.abs(dimAvg.Risk - ideal.Risk) +
+      1 * Math.abs(dimAvg.Horizon - ideal.Horizon) +
+      2 * Math.abs(dimAvg.Involvement - ideal.Involvement)
+    );
+  }
+
+  function getDimensionContributions(dimAvg, ideal) {
+    return [
+      { dimension: 'Risk', gap: 2 * Math.abs(dimAvg.Risk - ideal.Risk) },
+      { dimension: 'Horizon', gap: 1 * Math.abs(dimAvg.Horizon - ideal.Horizon) },
+      { dimension: 'Involvement', gap: 2 * Math.abs(dimAvg.Involvement - ideal.Involvement) }
+    ].sort((a, b) => b.gap - a.gap);
+  }
+
+  function renderQuestion() {
+    selectedOptionIndex = null;
+    nextBtn.disabled = true;
+
+    const q = stage === 1 ? questions[currentQuestion] : stage2Questions[currentQuestion];
+    questionText.textContent = q.text;
+
+    const questionsAnswered = stage === 1 ? currentQuestion : questions.length + currentQuestion;
+    progressFill.style.width = `${((questionsAnswered + 1) / totalQuestions) * 100}%`;
+    progressLabel.textContent = `Question ${questionsAnswered + 1} of ${totalQuestions}`;
+
+    optionsContainer.innerHTML = '';
+    q.options.forEach((option, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = option.label;
+      btn.addEventListener('click', () => selectOption(index));
+      optionsContainer.appendChild(btn);
+    });
+
+    const isFinalQuestion = stage === 2 && currentQuestion === stage2Questions.length - 1;
+    nextBtn.textContent = isFinalQuestion ? 'Finish' : 'Next';
+  }
+
+  function selectOption(index) {
+    selectedOptionIndex = index;
+    nextBtn.disabled = false;
+
+    const optionEls = optionsContainer.querySelectorAll('.option');
+    optionEls.forEach((el, i) => {
+      el.classList.toggle('selected', i === index);
+    });
+  }
+
+  function applyStage1Scores() {
+    const chosen = questions[currentQuestion].options[selectedOptionIndex];
+    for (const archetype in chosen.scores) {
+      archetypeScores[archetype] += chosen.scores[archetype];
+    }
+    stage1AnswerLog.push({ scores: chosen.scores, reason: chosen.reason });
+  }
+
+  function applyStage2Scores() {
+    const q = stage2Questions[currentQuestion];
+    const chosen = q.options[selectedOptionIndex];
+    dimensionAnswers[q.dimension].push(chosen.points);
+  }
+
+  function average(arr) {
+    return arr.reduce((sum, n) => sum + n, 0) / arr.length;
+  }
+
+  function finishQuiz() {
+    dimensionAverages.Risk = average(dimensionAnswers.Risk);
+    dimensionAverages.Horizon = average(dimensionAnswers.Horizon);
+    dimensionAverages.Involvement = average(dimensionAnswers.Involvement);
+
+    if (stage1Tie) {
+      // Calculate mismatch against BOTH tied candidates; lower mismatch wins the tie.
+      const [candidateA, candidateB] = tieCandidates;
+      const mismatchA = calcMismatch(dimensionAverages, archetypeIdealProfiles[candidateA]);
+      const mismatchB = calcMismatch(dimensionAverages, archetypeIdealProfiles[candidateB]);
+
+      winningArchetype = mismatchA <= mismatchB ? candidateA : candidateB;
+      mismatchScore = Math.min(mismatchA, mismatchB);
+    } else {
+      mismatchScore = calcMismatch(dimensionAverages, archetypeIdealProfiles[winningArchetype]);
+    }
+
+    originalArchetype = winningArchetype;
+    dimensionContributions = getDimensionContributions(dimensionAverages, archetypeIdealProfiles[winningArchetype]);
+
+    // Mismatch score for ALL 8 archetypes — used for the reroute search and the QA breakdown table.
+    allArchetypeMismatches = Object.keys(archetypeIdealProfiles)
+      .map(archetype => ({
+        archetype,
+        mismatch: calcMismatch(dimensionAverages, archetypeIdealProfiles[archetype])
+      }))
+      .sort((a, b) => a.mismatch - b.mismatch);
+
+    // Override/reroute tiers
+    if (mismatchScore <= 4) {
+      finalTier = 'confirmed';
+      finalArchetype = winningArchetype;
+    } else if (mismatchScore <= 9) {
+      finalTier = 'caveat';
+      finalArchetype = winningArchetype;
+    } else {
+      finalTier = 'rerouted';
+      finalArchetype = allArchetypeMismatches[0].archetype;
+    }
+
+    renderResults();
+  }
+
+  // ---------- Results rendering ----------
+
+  function dimensionSentence(dimension, userVal, idealVal) {
+    const diff = userVal - idealVal;
+    if (Math.abs(diff) < 0.5) return null;
+
+    if (dimension === 'Involvement') {
+      return diff < 0
+        ? "This archetype typically involves active company research, but your involvement score came in low — consider a fund or ETF built around this style rather than picking individual stocks yourself."
+        : "This archetype typically requires less hands-on involvement than you're looking for — you may want to supplement it with more active research or a satellite of individual picks.";
+    }
+
+    if (dimension === 'Risk') {
+      return diff < 0
+        ? "Your comfort with volatility came in lower than this style usually requires, which can make it hard to stick with during a rough stretch."
+        : "You're more comfortable with volatility than this style typically involves — you may find it doesn't fully use your risk appetite.";
+    }
+
+    // Horizon
+    return diff < 0
+      ? "Your time horizon is shorter than what this approach typically assumes, which may not give the strategy enough runway to fully play out."
+      : "Your time horizon is longer than this approach typically requires, giving you more flexibility than the archetype assumes.";
+  }
+
+  function getTopReasons(archetype, count) {
+    return stage1AnswerLog
+      .filter(entry => entry.scores[archetype])
+      .sort((a, b) => b.scores[archetype] - a.scores[archetype])
+      .slice(0, count)
+      .map(entry => entry.reason);
+  }
+
+  function buildDimensionTable(ideal) {
+    const rows = [
+      { label: 'Risk Tolerance', user: dimensionAverages.Risk, ideal: ideal.Risk },
+      { label: 'Time Horizon', user: dimensionAverages.Horizon, ideal: ideal.Horizon },
+      { label: 'Involvement Level', user: dimensionAverages.Involvement, ideal: ideal.Involvement }
+    ];
+
+    return `
+      <table class="dimension-table">
+        <thead>
+          <tr><th>Dimension</th><th>Your Score</th><th>Archetype Ideal</th></tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${r.label}</td>
+              <td class="num">${r.user.toFixed(1)}</td>
+              <td class="num">${r.ideal.toFixed(1)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function buildTierNote() {
+    const finalName = archetypeDisplayNames[finalArchetype];
+    const originalName = archetypeDisplayNames[originalArchetype];
+
+    if (finalTier === 'confirmed') {
+      return `<div class="tier-note">Your risk tolerance, time horizon, and involvement level line up well with the <strong>${finalName}</strong> approach — the way you think about investing matches how you're actually likely to behave with your money.</div>`;
+    }
+
+    if (finalTier === 'caveat') {
+      const topDims = dimensionContributions.filter(d => d.gap > 0).slice(0, 2);
+      const sentences = topDims
+        .map(d => dimensionSentence(d.dimension, dimensionAverages[d.dimension], archetypeIdealProfiles[finalArchetype][d.dimension]))
+        .filter(Boolean);
+      return `<div class="tier-note">The <strong>${finalName}</strong> label still fits your investing philosophy best, but there's a gap worth knowing about. ${sentences.join(' ')}</div>`;
+    }
+
+    // rerouted
+    const topDims = dimensionContributions.filter(d => d.gap > 0).slice(0, 2);
+    const dimNames = topDims.map(d => d.dimension).join(' and ');
+    const sentences = topDims
+      .map(d => dimensionSentence(d.dimension, dimensionAverages[d.dimension], archetypeIdealProfiles[originalArchetype][d.dimension]))
+      .filter(Boolean);
+    return `<div class="tier-note">Your Stage 1 answers pointed toward the <strong>${originalName}</strong> philosophy, but your ${dimNames} didn't support that approach in practice. Based on how you actually behave with money, you've been matched instead with <strong>${finalName}</strong>. ${sentences.join(' ')}</div>`;
+  }
+
+  function buildQASection() {
+    const rows = allArchetypeMismatches.map(entry => {
+      const isStage1Winner = entry.archetype === originalArchetype;
+      const isFinal = entry.archetype === finalArchetype;
+      const tags = [
+        isStage1Winner ? '<span class="qa-tag stage1">Stage 1 Winner</span>' : '',
+        isFinal ? '<span class="qa-tag final">Final Archetype</span>' : ''
+      ].join('');
+
+      return `
+        <tr class="${isFinal ? 'is-winner' : ''}">
+          <td>${archetypeDisplayNames[entry.archetype]}${tags}</td>
+          <td class="num">${entry.mismatch.toFixed(1)}</td>
+        </tr>
+      `;
+    }).join('');
+
+    const tieNote = stage1Tie
+      ? `<p>Stage 1 was a tie between <strong>${archetypeDisplayNames[tieCandidates[0]]}</strong> and <strong>${archetypeDisplayNames[tieCandidates[1]]}</strong>; the tie-break went to whichever had the lower Stage 2 mismatch score.</p>`
+      : '';
+
+    return `
+      <details class="qa-toggle">
+        <summary>See full scoring breakdown</summary>
+        <div class="results-section" style="border-top: none; margin-top: 12px; padding-top: 0;">
+          ${tieNote}
+          <p>Mismatch score for all 8 archetypes, lowest (best fit) first:</p>
+          <div class="table-wrap">
+            <table class="qa-table">
+              <thead>
+                <tr><th>Archetype</th><th>Mismatch Score</th></tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    `;
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function unlockResults() {
+    emailUnlocked = true;
+
+    const whyWrap = document.getElementById('whyLandedHere');
+    const gate = document.getElementById('emailGate');
+    const full = document.getElementById('fullResults');
+
+    whyWrap.classList.remove('locked');
+    gate.classList.add('gate-hidden');
+    full.classList.remove('hidden');
+    requestAnimationFrame(() => full.classList.add('revealed'));
+
+    setTimeout(() => { gate.style.display = 'none'; }, 400);
+  }
+
+  function handleEmailSubmit(event) {
+    event.preventDefault();
+
+    const emailInput = document.getElementById('emailInput');
+    const emailError = document.getElementById('emailError');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const email = emailInput.value.trim();
+
+    if (!isValidEmail(email)) {
+      emailError.classList.remove('hidden');
+      emailInput.setAttribute('aria-invalid', 'true');
+      return;
+    }
+
+    emailError.classList.add('hidden');
+    emailInput.removeAttribute('aria-invalid');
+    unlockBtn.disabled = true;
+    unlockBtn.textContent = 'Unlocking...';
+
+    // Apps Script webhooks don't return CORS headers, so the response is opaque under
+    // mode: 'no-cors'. We can't read success/failure from it — reveal results optimistically
+    // once the request has been sent, in both the resolve and reject paths.
+    fetch(EMAIL_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ email, archetype: archetypeDisplayNames[finalArchetype] })
+    })
+      .then(unlockResults)
+      .catch(unlockResults);
+  }
+
+  function renderResults() {
+    const finalName = archetypeDisplayNames[finalArchetype];
+    const reasons = getTopReasons(originalArchetype, 3);
+    const tableIdeal = archetypeIdealProfiles[finalArchetype];
+
+    resultsContainer.innerHTML = `
+      <p class="results-eyebrow">Your Profile</p>
+      <h1 class="archetype-name">${finalName}</h1>
+      <p class="teaser">${archetypeTeasers[finalArchetype]}</p>
+
+      <div class="locked-section locked" id="whyLandedHere">
+        <h2>Why You Landed Here</h2>
+        <ul class="reason-list">
+          ${reasons.map(r => `<li>${r}</li>`).join('')}
+        </ul>
+        <div class="gate-fade"></div>
+      </div>
+
+      <div class="email-gate" id="emailGate">
+        <p class="gate-eyebrow">🔒 Unlock Your Full Results</p>
+        <p class="gate-copy">Enter your email to see exactly why you landed here, how your risk tolerance, time horizon, and involvement level compare to this archetype, and the full scoring breakdown.</p>
+        <form class="email-form" id="emailForm" novalidate>
+          <input type="email" class="email-input" id="emailInput" placeholder="you@example.com" autocomplete="email" required>
+          <button type="submit" class="unlock-btn" id="unlockBtn">Unlock My Full Results</button>
+        </form>
+        <p class="email-error hidden" id="emailError">Please enter a valid email address.</p>
+        <p class="email-microcopy">We'll only use this to send your results and occasional investing insights — no spam.</p>
+      </div>
+
+      <div class="full-results hidden" id="fullResults">
+        <div class="results-section" style="border-top: none; padding-top: 0;">
+          <span class="tier-badge ${finalTier}">${finalTier}</span>
+          <p class="archetype-description">${archetypeDescriptions[finalArchetype]}</p>
+        </div>
+
+        <div class="results-section">
+          <h2>How Your Risk Tolerance, Time Horizon, and Involvement Shape This</h2>
+          ${buildDimensionTable(tableIdeal)}
+          ${buildTierNote()}
+        </div>
+
+        <div class="results-section">
+          ${buildQASection()}
+        </div>
+
+        <p class="disclaimer"><strong>Disclaimer:</strong> This quiz is for entertainment and self-reflection purposes only. It is not investment, financial, tax, or legal advice, and it does not constitute a recommendation to buy, sell, or hold any security or to adopt any particular investment strategy. The archetypes, scoring, and commentary are simplified generalizations and do not account for your complete financial situation, goals, or risk capacity. Nothing here should be relied upon when making investment decisions — consult a licensed financial advisor before making any investment or financial planning decisions.</p>
+      </div>
+
+      <div class="retake-row">
+        <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+      </div>
+    `;
+
+    quizContainer.classList.add('hidden');
+    resultsContainer.classList.remove('hidden');
+
+    document.getElementById('emailForm').addEventListener('submit', handleEmailSubmit);
+    document.getElementById('retakeBtn').addEventListener('click', retakeQuiz);
+  }
+
+  function retakeQuiz() {
+    currentQuestion = 0;
+    stage = 1;
+    selectedOptionIndex = null;
+    winningArchetype = null;
+    stage1Tie = false;
+    tieCandidates = null;
+    finalTier = null;
+    finalArchetype = null;
+    originalArchetype = null;
+    dimensionContributions = null;
+    dimensionAnswers = { Risk: [], Horizon: [], Involvement: [] };
+    dimensionAverages = { Risk: 0, Horizon: 0, Involvement: 0 };
+    mismatchScore = null;
+    stage1AnswerLog = [];
+    allArchetypeMismatches = [];
+    emailUnlocked = false;
+    for (const archetype in archetypeScores) archetypeScores[archetype] = 0;
+
+    resultsContainer.classList.add('hidden');
+    resultsContainer.innerHTML = '';
+    quizContainer.classList.remove('hidden');
+
+    renderQuestion();
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (nextBtn.disabled || selectedOptionIndex === null) return;
+
+    if (stage === 1) {
+      applyStage1Scores();
+
+      if (currentQuestion === questions.length - 1) {
+        resolveStage1Result();
+        stage = 2;
+        currentQuestion = 0;
+        renderQuestion();
+        return;
+      }
+
+      currentQuestion++;
+      renderQuestion();
+      return;
+    }
+
+    // stage 2
+    applyStage2Scores();
+
+    if (currentQuestion === stage2Questions.length - 1) {
+      finishQuiz();
+      return;
+    }
+
+    currentQuestion++;
+    renderQuestion();
+  });
+
+  takeQuizBtn.addEventListener('click', () => {
+    homeContainer.classList.add('hidden');
+    quizContainer.classList.remove('hidden');
+    renderQuestion();
+  });
+</script>
+
+</body>
+</html>
